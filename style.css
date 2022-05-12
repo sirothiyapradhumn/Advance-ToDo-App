@@ -102,3 +102,7 @@ textarea{
   height: 10%;
   width: 38%;
 }
+
+.active{
+  border: 5px solid red;
+}
