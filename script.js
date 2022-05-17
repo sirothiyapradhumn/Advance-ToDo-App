@@ -1,3 +1,4 @@
+ var uid = new ShortUniqueId();
 const addBtn = document.querySelector(".add-btn");
 const modalCont = document.querySelector(".modal-cont");
 const allPriorityColors = document.querySelectorAll(".priority-color");
@@ -7,9 +8,9 @@ let textAreaCont = document.querySelector(".textarea-cont");
 
 const mainCont = document.querySelector(".main-cont");
 
+let ticketArr = [];
 
-
-
+//TO OPEN CLOSE MODAL CONTAINER
 let isModalPresent = false;
 addBtn.addEventListener('click', function(){
     if(!isModalPresent){
@@ -24,9 +25,7 @@ addBtn.addEventListener('click', function(){
     isModalPresent = !isModalPresent // toggling  effect  insted using line 9 & 13 we use toggling effect;
 })
 
-
-
-
+//TO REMOVE AND ADD ACTIVE CLASS FROM PRIORITY COLOR OF MODAL CONTAINER
 allPriorityColors.forEach(function (colorElement) {
   colorElement.addEventListener("click", function () {
     //remove kar do if in allprioritycolor have active class
@@ -39,11 +38,12 @@ allPriorityColors.forEach(function (colorElement) {
   });
 });
 
+//TO GENERATE AND DISPLAY A TICKET
 modalCont.addEventListener("keydown", function(e){
     let key = e.key;
     if(key == "Shift"){
-        console.log(modalPriorityColor);
-        console.log(textAreaCont.value);
+        //console.log(modalPriorityColor);
+        //console.log(textAreaCont.value);
         createTicket(modalPriorityColor, textAreaCont.value);
         modalCont.style.display = "none";
         isModalPresent = false;
@@ -54,14 +54,35 @@ modalCont.addEventListener("keydown", function(e){
     }
 });
 
-function createTicket(ticketColor, data){
+//FUNCTION TO CREATE NEW TICKET
+function createTicket(ticketColor, data, ticketId){
+    let id = ticketId || uid();
     let ticketCont = document.createElement("div"); //<div></div>
     ticketCont.setAttribute("class", "ticket-cont");
     ticketCont.innerHTML=`
         <div class="ticket-color ${ticketColor}"></div>
-        <div class="ticket-id" ></div>
+        <div class="ticket-id"> ${id}</div>
         <div class="ticket-area">${data}</div>
     `;
 
     mainCont.appendChild(ticketCont);
+
+    //if ticket is being created for the first time, then ticketId would be undefine
+    if(!ticketId){
+        ticketArr.push(
+            {
+                ticketColor,
+                 data,
+                ticketId:id});
+        localStorage.setItem("tickets", JSON.stringify(ticketArr))
+    }
 }
+
+//GET ALL TICKET FROM LOCALSTORAGE
+if(localStorage.getItem("tickets")){
+    ticketArr = JSON.parse(localStorage.getItem("tickets"));
+    ticketArr.forEach(function(ticketObj){
+        createTicket(ticketObj.ticketColor, ticketObj.data, ticketObj.ticketId);
+    })
+}
+
