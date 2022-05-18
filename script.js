@@ -5,10 +5,11 @@ const allPriorityColors = document.querySelectorAll(".priority-color");
 let colors = ['lightpink', 'lightgreen', 'lightblue', 'black'];
 let modalPriorityColor = colors[colors.length-1]; // black is selected
 let textAreaCont = document.querySelector(".textarea-cont");
-
 const mainCont = document.querySelector(".main-cont");
-
 let ticketArr = [];
+
+let toolboxColors = document.querySelectorAll(".color");
+//console.log(toolboxColors);
 
 //TO OPEN CLOSE MODAL CONTAINER
 let isModalPresent = false;
@@ -39,7 +40,7 @@ allPriorityColors.forEach(function (colorElement) {
 });
 
 //TO GENERATE AND DISPLAY A TICKET
-modalCont.addEventListener("keydown", function(e){
+modalCont.addEventListener("keydown", function(e){ 
     let key = e.key;
     if(key == "Shift"){
         //console.log(modalPriorityColor);
@@ -86,3 +87,39 @@ if(localStorage.getItem("tickets")){
     })
 }
 
+//FILTER TICKET ON THT BASIS OF TICKETCOLOR
+for(let i = 0; i<toolboxColors.length; i++){
+    toolboxColors[i].addEventListener("click", function(){
+        let currToolBoxColor = toolboxColors[i].classList[0];
+
+        // filterticket will be return arr 
+        let filterTickets = ticketArr.filter(function(ticketObj){
+            return currToolBoxColor == ticketObj.ticketColor;
+        });
+
+        // remove all the ticket
+        let allTickets = document.querySelectorAll(".ticket-cont");
+        for(let i =0; i<allTickets.length; i++){
+            allTickets[i].remove();
+        }
+
+        //display filteredTicked
+        filterTickets.forEach(function(ticketObj){
+            createTicket(ticketObj.ticketColor, ticketObj.data, ticketObj.ticketId);
+        })
+    })
+
+    //to display all the ticket of all color on doubleclicking
+    toolboxColors[i].addEventListener("dblclick", function(){
+        let allTickets = document.querySelectorAll(".ticket-cont");
+        for(let i =0; i<allTickets.length; i++){
+            allTickets[i].remove();
+        }
+
+        //display all tickets 
+        ticketArr.forEach(function(ticketObj){
+            createTicket(ticketObj.ticketColor, ticketObj.data, ticketObj.ticketId);
+        })
+    })
+
+}
