@@ -138,6 +138,7 @@ removeBtn.addEventListener("click", function(){
     removeBtnActive = !removeBtnActive;
 });
 
+//remove ticket from local storage and ui
 function handleRemoval(ticket, id){
     ticket.addEventListener("click", function(){
         if(!removeBtnActive) return;
@@ -155,6 +156,7 @@ function handleRemoval(ticket, id){
     });
 }
 
+//return index of the ticket inside local storage's array
 function getTicketIdx(id){
     let ticketIdx = ticketArr.findIndex(function(ticketObj){
         return ticketObj.ticketId == id;
