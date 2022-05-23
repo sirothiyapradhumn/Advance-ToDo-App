@@ -69,6 +69,7 @@ function createTicket(ticketColor, data, ticketId){
     mainCont.appendChild(ticketCont);
 
     handleRemoval(ticketCont, id);
+    handleColor(ticketCont, id);
 
     //if ticket is being created for the first time, then ticketId would be undefine
     if(!ticketId){
@@ -162,4 +163,28 @@ function getTicketIdx(id){
         return ticketObj.ticketId == id;
     })
     return ticketIdx;
+}
+
+//change priority color of the tickets 
+function handleColor(ticket, id){
+    let ticketColorStrip = ticket.querySelector(".ticket-color"); 
+
+    ticketColorStrip.addEventListener("click", function(){
+        let currTicketColor = ticketColorStrip.classList[1]; //lightpink
+        //['lightpink', 'lightgreen', 'lightblue', 'black'];
+        let currTicketColorIdx = colors.indexOf(currTicketColor);//0
+
+        let newTicketColorIdx =currTicketColorIdx +1;//1
+
+        newTicketColorIdx = newTicketColorIdx % colors.length;//1
+        let newTicketColor = colors[newTicketColorIdx]; // lightgreen
+
+        ticketColorStrip.classList.remove(currTicketColor);
+        ticketColorStrip.classList.add(newTicketColor);
+
+        //local storage update
+        let ticketIdx = getTicketIdx(id);
+        ticketArr[ticketIdx].ticketColor = newTicketColor;
+        localStorage.setItem("tickets", JSON.stringify(ticketArr));
+    });
 }
