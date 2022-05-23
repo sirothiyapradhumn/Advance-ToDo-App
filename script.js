@@ -1,4 +1,4 @@
- var uid = new ShortUniqueId();
+var uid = new ShortUniqueId();
 const addBtn = document.querySelector(".add-btn");
 const modalCont = document.querySelector(".modal-cont");
 const allPriorityColors = document.querySelectorAll(".priority-color");
@@ -7,9 +7,9 @@ let modalPriorityColor = colors[colors.length-1]; // black is selected
 let textAreaCont = document.querySelector(".textarea-cont");
 const mainCont = document.querySelector(".main-cont");
 let ticketArr = [];
-
 let toolboxColors = document.querySelectorAll(".color");
 //console.log(toolboxColors);
+let removeBtn = document.querySelector(".remove-btn");
 
 //TO OPEN CLOSE MODAL CONTAINER
 let isModalPresent = false;
@@ -68,6 +68,8 @@ function createTicket(ticketColor, data, ticketId){
 
     mainCont.appendChild(ticketCont);
 
+    handleRemoval(ticketCont, id);
+
     //if ticket is being created for the first time, then ticketId would be undefine
     if(!ticketId){
         ticketArr.push(
@@ -122,4 +124,40 @@ for(let i = 0; i<toolboxColors.length; i++){
         })
     })
 
+}
+
+//on clicking removeBtn make color red and make color white in clincking again
+let removeBtnActive = false;
+removeBtn.addEventListener("click", function(){
+    if(removeBtnActive){
+        removeBtn.style.color = "white";
+    }
+    else{
+        removeBtn.style.color = "red";
+    }
+    removeBtnActive = !removeBtnActive;
+});
+
+function handleRemoval(ticket, id){
+    ticket.addEventListener("click", function(){
+        if(!removeBtnActive) return;
+        //local storage remove
+        //->get idx of the ticket to be deleted
+    
+        let idx = getTicketIdx(id);
+        ticketArr.splice(idx, 1); // splice method changes the contents of an array
+        
+        //remove from browser storage and set updated arr
+        localStorage.setItem("tickets", JSON.stringify(ticketArr));
+
+        //fronted remove
+        ticket.remove();
+    });
+}
+
+function getTicketIdx(id){
+    let ticketIdx = ticketArr.findIndex(function(ticketObj){
+        return ticketObj.ticketId == id;
+    })
+    return ticketIdx;
 }
