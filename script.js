@@ -10,6 +10,8 @@ let ticketArr = [];
 let toolboxColors = document.querySelectorAll(".color");
 //console.log(toolboxColors);
 let removeBtn = document.querySelector(".remove-btn");
+let lockClass = "fa-lock";
+let unlockClass = "fa-lock-open";
 
 //TO OPEN CLOSE MODAL CONTAINER
 let isModalPresent = false;
@@ -64,12 +66,14 @@ function createTicket(ticketColor, data, ticketId){
         <div class="ticket-color ${ticketColor}"></div>
         <div class="ticket-id"> ${id}</div>
         <div class="ticket-area">${data}</div>
+        <div class="ticket-lock"> <i class="fa-solid fa-lock"></i> </div>
     `;
 
     mainCont.appendChild(ticketCont);
 
     handleRemoval(ticketCont, id);
     handleColor(ticketCont, id);
+    handleLock(ticketCont, id);
 
     //if ticket is being created for the first time, then ticketId would be undefine
     if(!ticketId){
@@ -187,4 +191,36 @@ function handleColor(ticket, id){
         ticketArr[ticketIdx].ticketColor = newTicketColor;
         localStorage.setItem("tickets", JSON.stringify(ticketArr));
     });
+}
+
+//lock and unlock to make content editable true or false
+function handleLock(ticket, id){
+    //icons ko append in ticket
+
+    console.log(ticket);
+    
+    let ticketLockEle = ticket.querySelector(".ticket-lock");
+    let ticketLock = ticketLockEle.children[0];
+    let ticketTaskArea = ticket.querySelector('.ticket-area')
+    console.log(ticketTaskArea);
+
+    //toggle of icons and contenteditable property
+    ticketLock.addEventListener("click", function(){
+        let ticketIdx = getTicketIdx(id);
+        if(ticketLock.classList.contains(lockClass)){
+            ticketLock.classList.remove(lockClass);
+            ticketLock.classList.add(unlockClass);
+            console.log(ticketTaskArea);
+            ticketTaskArea.setAttribute("contenteditable", "true");
+        }
+        else{
+            ticketLock.classList.remove(unlockClass);
+            ticketLock.classList.add(lockClass);
+            ticketTaskArea.setAttribute("contenteditable", "false");
+        }
+
+        ticketArr[ticketIdx].data = ticketTaskArea.innerText;
+        localStorage.setItem("tickets", JSON.stringify(ticketArr));
+    });
+    
 }

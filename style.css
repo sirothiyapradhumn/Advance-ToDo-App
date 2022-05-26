@@ -132,6 +132,17 @@ textarea{
 
 .main-cont{
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
+  padding: 2rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.ticket-lock{
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: flex-end;
+  height: 2rem;
+  margin-top: -25px;
+  margin-right: 11px;
 }
